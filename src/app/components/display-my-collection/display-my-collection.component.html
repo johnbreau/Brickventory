@@ -1,0 +1,34 @@
+<div>
+  <div class="container-fluid">
+    <div class="table-responsive">
+      <!-- <h1>Set Database</h1> -->
+      <table>
+        <thead>
+          <tr>
+            <th>Set Name</th>
+            <th>Set Number </th>
+            <th>No. of Pieces</th>
+            <th>Set Year</th>
+            <th>Set Theme</th>
+            <th>Set Location</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr  *ngFor="let set of displaySet">
+            <td>{{set.setName}}</td>
+            <td>{{set.setNumber}}</td>
+            <td>{{set.setPieces}}</td>
+            <td>{{set.setYear}}</td>
+            <td>{{set.setTheme}}</td>
+            <td>{{set.setLocation}}</td>
+            <td>
+              <input type="button" (click)="updateSet(set._id)" class="btn btn-success" value="Update Set">
+              <input type="button" (click)="deleteSet(set._id)" class="btn btn-danger" value="Delete Set">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

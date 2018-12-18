@@ -1,0 +1,33 @@
+<div class="container find-set-form-container">
+  <div class="instruction-box">
+    <form [formGroup]="setFinder" class="container">
+      <div class="row">
+        <div class="form-group col-sm-12 col-md-6">
+          <label for="setNumber">Entre Set Number...</label>
+          <input type="text"
+                class="form-control"
+                formControlName="setNumber"
+                id="setNumber" required>
+        </div>
+      </div>
+      <div class="row px-3">
+        <button type="submit" class="btn btn-success btn-block" (click)="getOneOfMySets()">Get the Set From My Collection</button>
+      </div>
+    </form>
+    <div *ngIf="showSection">
+      <div>Name:</div>
+      <div>{{displaySet.setName}}</div>
+      <div>Number:</div>
+      <div>{{displaySet.setNumber}}</div>
+      <div>Pieces:</div>
+      <div>{{displaySet.setPieces}}</div>
+      <div>Year:</div>
+      <div>{{displaySet.setYear}}</div>
+      <div>Storage Location:</div>
+      <div>{{displaySet.setLocation}}</div>
+      <div class="setImage">
+        <img class="" src="{{displaySet.imageURL}}"/>
+      </div>
+    </div>
+  </div>
+</div>

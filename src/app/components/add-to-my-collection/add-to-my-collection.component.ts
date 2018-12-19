@@ -15,25 +15,22 @@ export class AddToMyCollectionComponent implements OnInit {
   public scanData: {};
   public setForm: FormGroup;
   public findSetForm: FormGroup;
-  public barcodeScannerValue: string;
-  public scanFailed = false;
   public displayFormSuccess = false;
-  public fromUPCDatabase: Observable<any>;
-  public barcodeReturn: any;
   public sets: Set[];
   public displaySet: any;
   public setData: any;
   public showSection = false;
   public findSetFormClicked = false;
-  public usingCamera = false;
   public video: any;
-  public captureButton: any;
+  public showCaptureButton = false;
   public streaming = false;
-  public photoElement: any;
   public canvas: HTMLCanvasElement;
   public ctx: any;
+  public videoDisplayToggle: any;
+  public capturedImage: string;
+  public showCapturedImage = false;
 
-  @ViewChild('videoElement') videoElement: any;
+  @ViewChild('videoElement') videoElement;
 
   constructor(
               private formBuilder: FormBuilder,
@@ -43,10 +40,11 @@ export class AddToMyCollectionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.videoDisplayToggle = document.getElementsByClassName('hideVideoElement');
+    this.videoDisplayToggle[0].classList.add('hidden');
     this.video = this.videoElement.nativeElement as HTMLCanvasElement;
-    this.captureButton = document.getElementById('startbutton');
 
-    this.bricksetScraperService.bricketGetSet();
+    // this.bricksetScraperService.bricketGetSet();
 
     this.setForm = this.formBuilder.group({
       setName: [
@@ -71,10 +69,6 @@ export class AddToMyCollectionComponent implements OnInit {
         Validators.compose([Validators.required])
       ]
     });
-  }
-
-  toggleCamera() {
-    this.usingCamera = true;
   }
 
   findSetByNumber() {
@@ -115,11 +109,13 @@ export class AddToMyCollectionComponent implements OnInit {
   }
 
   start() {
+    this.showCaptureButton = true;
+    this.videoDisplayToggle[0].classList.remove('hidden');
     this.initCamera({ video: true, audio: false });
   }
-    initCamera(config: any) {
-    const browser = <any>navigator;
 
+  initCamera(config: any) {
+    const browser = <any>navigator;
     browser.getUserMedia = (browser.getUserMedia ||
       browser.webkitGetUserMedia ||
       browser.mozGetUserMedia ||
@@ -131,18 +127,19 @@ export class AddToMyCollectionComponent implements OnInit {
     });
 
     this.canvas = document.createElement('canvas');
-    this.canvas.width = 640;
-    this.canvas.height = 480;
     this.ctx = this.canvas.getContext('2d');
+    this.canvas.width = 320;
+    this.canvas.height = 240;
   }
 
-   capture() {
-    console.log('cap data', this.canvas);
+  capture() {
     this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
-    const dataURI = this.canvas.toDataURL('image/jpeg');
-    console.log('dataURI', dataURI)
-    // this.canvasElement.getContext('2d').drawImage(this.videoElement, 0, 0, 640, 480);
-    // this.photoElement.getContext('2d').drawImage(this.canvasElement, 0, 0, 160, 120);
+    this.capturedImage = this.canvas.toDataURL('image/jpeg');
+    const video = this.video.srcObject.getTracks()[0];
+    video.stop();
+    this.videoDisplayToggle[0].classList.add('hidden');
+    this.showCaptureButton = false;
+    this.showCapturedImage = true;
   }
 
   closeBanner() {

@@ -8,6 +8,7 @@ export class Set {
     public setTheme?: string,
     public setLocation?: string,
     public barcodeValue?: number,
+    public imageURL?: string,
   ) {  }
 
 }

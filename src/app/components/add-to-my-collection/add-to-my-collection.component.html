@@ -1,7 +1,7 @@
-<div *ngIf="displayFormSuccess" class="successBanner">Set Successfully Submitted<span class="closeButton" (click)="closeBanner()">X</span></div>
 
+
+<div *ngIf="displayFormSuccess" class="successBanner">Set Successfully Submitted<span class="closeButton" (click)="closeBanner()">X</span></div>
 <div class="container find-set-form-container" *ngIf="!findSetFormClicked">
-  <div id="circle">x</div>
   <!-- <h4 class="center-text">Find Set Form</h4> -->
   <div class="instruction-box">
     <div class="instruction-header">Enter Set Number...</div>
@@ -21,7 +21,19 @@
   </div>
 </div>
 
-  <div class="container" *ngIf="findSetFormClicked">
+<div class="container">
+  <div class="instruction-box">
+    <div class="instruction-header">Scan the Barcode...</div>
+    <button type="submit" class="btn btn-success btn-block" (click)="start()">Get Set Via Barcode Scan</button>
+      <video #videoElement class="hideVideoElement"></video>
+    <button *ngIf="showCaptureButton" class="btn btn-success btn-block" (click)="capture()">Capture Image</button>
+    <div *ngIf="showCapturedImage" class="captured-image-container">
+      <img src="{{capturedImage}}"/>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="findSetFormClicked">
   <form [formGroup]="setForm" class="container">
     <div class="row">
       <div class="form-group col-lg-12">
@@ -103,6 +115,4 @@
       <button type="submit" class="btn btn-success btn-block" (click)="addSet()">Add Set To Collection</button>
     </div>
   </form>
-  <div>
-</div>
 </div>

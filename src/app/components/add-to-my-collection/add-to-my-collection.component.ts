@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MySetsDatabaseService } from '../../services/mySetsDatabaseService/my-sets-database.service';
 import { LegoGroupSetsDatabaseService } from '../../services/legoGroupSetsDatabaseService/lego-group-sets-database.service';
@@ -15,16 +15,22 @@ export class AddToMyCollectionComponent implements OnInit {
   public scanData: {};
   public setForm: FormGroup;
   public findSetForm: FormGroup;
-  public barcodeScannerValue: string;
-  public scanFailed = false;
   public displayFormSuccess = false;
-  public fromUPCDatabase: Observable<any>;
-  public barcodeReturn: any;
   public sets: Set[];
   public displaySet: any;
   public setData: any;
   public showSection = false;
   public findSetFormClicked = false;
+  public video: any;
+  public showCaptureButton = false;
+  public streaming = false;
+  public canvas: HTMLCanvasElement;
+  public ctx: any;
+  public videoDisplayToggle: any;
+  public capturedImage: string;
+  public showCapturedImage = false;
+
+  @ViewChild('videoElement') videoElement;
 
   constructor(
               private formBuilder: FormBuilder,
@@ -34,7 +40,12 @@ export class AddToMyCollectionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.bricksetScraperService.bricketGetSet();
+    this.videoDisplayToggle = document.getElementsByClassName('hideVideoElement');
+    this.videoDisplayToggle[0].classList.add('hidden');
+    this.video = this.videoElement.nativeElement as HTMLCanvasElement;
+
+    // this.bricksetScraperService.bricketGetSet();
+
     this.setForm = this.formBuilder.group({
       setName: [
         '',
@@ -97,25 +108,39 @@ export class AddToMyCollectionComponent implements OnInit {
       });
   }
 
-  // bricksetTester(){
-  //   this.bricksetGateway.bricketGetSet();
-  // }
+  start() {
+    this.showCaptureButton = true;
+    this.videoDisplayToggle[0].classList.remove('hidden');
+    this.initCamera({ video: true, audio: false });
+  }
 
-  // scanButton() {
-  //   this.barcodeScanner.scan()
-  //     .then((barcodeData) => {
-  //       this.barcodeGateway.getBarcodeData(barcodeData.text)
-  //     .subscribe(barcodeObject => {
-  //       this.barcodeReturn = barcodeObject;
-  //       this.setForm.controls['setName'].setValue(barcodeObject.items[0].title);
-  //       this.setForm.controls['setNumber'].setValue(barcodeObject.items[0].ean);
-  //       this.setForm.controls['setPieces'].setValue(barcodeObject.items[0].title);
-  //       this.setForm.controls['setYear'].setValue(barcodeObject.items[0].title);
-  //       this.setForm.controls['setTheme'].setValue(barcodeObject.items[0].title);
-  //       this.setForm.controls['setLocation'].setValue(barcodeObject.items[0].title);
-  //     });
-  //   });
-  // }
+  initCamera(config: any) {
+    const browser = <any>navigator;
+    browser.getUserMedia = (browser.getUserMedia ||
+      browser.webkitGetUserMedia ||
+      browser.mozGetUserMedia ||
+      browser.msGetUserMedia);
+
+    browser.mediaDevices.getUserMedia(config).then(stream => {
+      this.video.srcObject = stream;
+      this.video.play();
+    });
+
+    this.canvas = document.createElement('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.canvas.width = 320;
+    this.canvas.height = 240;
+  }
+
+  capture() {
+    this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+    this.capturedImage = this.canvas.toDataURL('image/jpeg');
+    const video = this.video.srcObject.getTracks()[0];
+    video.stop();
+    this.videoDisplayToggle[0].classList.add('hidden');
+    this.showCaptureButton = false;
+    this.showCapturedImage = true;
+  }
 
   closeBanner() {
     if (this.displayFormSuccess === true) {

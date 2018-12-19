@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, AfterViewInit, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MySetsDatabaseService } from '../../services/mySetsDatabaseService/my-sets-database.service';
 import { LegoGroupSetsDatabaseService } from '../../services/legoGroupSetsDatabaseService/lego-group-sets-database.service';
@@ -25,6 +25,11 @@ export class AddToMyCollectionComponent implements OnInit {
   public setData: any;
   public showSection = false;
   public findSetFormClicked = false;
+  public usingCamera = false;
+  public video: any;
+
+
+  @ViewChild('videoElement') videoElement: any;
 
   constructor(
               private formBuilder: FormBuilder,
@@ -34,6 +39,7 @@ export class AddToMyCollectionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.video = this.videoElement.nativeElement;
     this.bricksetScraperService.bricketGetSet();
     this.setForm = this.formBuilder.group({
       setName: [
@@ -58,6 +64,10 @@ export class AddToMyCollectionComponent implements OnInit {
         Validators.compose([Validators.required])
       ]
     });
+  }
+
+  toggleCamera() {
+    this.usingCamera = true;
   }
 
   findSetByNumber() {
@@ -116,6 +126,23 @@ export class AddToMyCollectionComponent implements OnInit {
   //     });
   //   });
   // }
+
+  start() {
+    this.initCamera({ video: true, audio: false });
+  }
+    initCamera(config: any) {
+    const browser = <any>navigator;
+
+    browser.getUserMedia = (browser.getUserMedia ||
+      browser.webkitGetUserMedia ||
+      browser.mozGetUserMedia ||
+      browser.msGetUserMedia);
+
+    browser.mediaDevices.getUserMedia(config).then(stream => {
+      this.video.srcObject = stream;
+      this.video.play();
+    });
+  }
 
   closeBanner() {
     if (this.displayFormSuccess === true) {

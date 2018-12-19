@@ -25,7 +25,11 @@
 <div class="container">
   <div class="instruction-box">
     <button type="submit" class="btn btn-success btn-block" (click)="start()">Start Video</button>
-    <video #videoElement></video>
+      <video #videoElement autoplay></video>
+      <canvas #canvasElement>
+        <img src="https://goo.gl/images/r9fopb"/>
+      </canvas>
+    <button class="btn btn-success btn-block" (click)="capture()">Capture Image</button> 
   </div>
 </div>
 

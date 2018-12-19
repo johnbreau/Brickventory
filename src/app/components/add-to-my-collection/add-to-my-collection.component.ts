@@ -27,7 +27,11 @@ export class AddToMyCollectionComponent implements OnInit {
   public findSetFormClicked = false;
   public usingCamera = false;
   public video: any;
-
+  public captureButton: any;
+  public streaming = false;
+  public photoElement: any;
+  public canvas: HTMLCanvasElement;
+  public ctx: any;
 
   @ViewChild('videoElement') videoElement: any;
 
@@ -39,8 +43,11 @@ export class AddToMyCollectionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.video = this.videoElement.nativeElement;
+    this.video = this.videoElement.nativeElement as HTMLCanvasElement;
+    this.captureButton = document.getElementById('startbutton');
+
     this.bricksetScraperService.bricketGetSet();
+
     this.setForm = this.formBuilder.group({
       setName: [
         '',
@@ -107,26 +114,6 @@ export class AddToMyCollectionComponent implements OnInit {
       });
   }
 
-  // bricksetTester(){
-  //   this.bricksetGateway.bricketGetSet();
-  // }
-
-  // scanButton() {
-  //   this.barcodeScanner.scan()
-  //     .then((barcodeData) => {
-  //       this.barcodeGateway.getBarcodeData(barcodeData.text)
-  //     .subscribe(barcodeObject => {
-  //       this.barcodeReturn = barcodeObject;
-  //       this.setForm.controls['setName'].setValue(barcodeObject.items[0].title);
-  //       this.setForm.controls['setNumber'].setValue(barcodeObject.items[0].ean);
-  //       this.setForm.controls['setPieces'].setValue(barcodeObject.items[0].title);
-  //       this.setForm.controls['setYear'].setValue(barcodeObject.items[0].title);
-  //       this.setForm.controls['setTheme'].setValue(barcodeObject.items[0].title);
-  //       this.setForm.controls['setLocation'].setValue(barcodeObject.items[0].title);
-  //     });
-  //   });
-  // }
-
   start() {
     this.initCamera({ video: true, audio: false });
   }
@@ -142,6 +129,20 @@ export class AddToMyCollectionComponent implements OnInit {
       this.video.srcObject = stream;
       this.video.play();
     });
+
+    this.canvas = document.createElement('canvas');
+    this.canvas.width = 640;
+    this.canvas.height = 480;
+    this.ctx = this.canvas.getContext('2d');
+  }
+
+   capture() {
+    console.log('cap data', this.canvas);
+    this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+    const dataURI = this.canvas.toDataURL('image/jpeg');
+    console.log('dataURI', dataURI)
+    // this.canvasElement.getContext('2d').drawImage(this.videoElement, 0, 0, 640, 480);
+    // this.photoElement.getContext('2d').drawImage(this.canvasElement, 0, 0, 160, 120);
   }
 
   closeBanner() {

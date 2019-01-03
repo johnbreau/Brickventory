@@ -44,7 +44,7 @@ export class AddToMyCollectionComponent implements OnInit {
     this.videoDisplayToggle[0].classList.add('hidden');
     this.video = this.videoElement.nativeElement as HTMLCanvasElement;
 
-    // this.bricksetScraperService.bricketGetSet();
+    this.bricksetScraperService.bricketGetSet();
 
     this.setForm = this.formBuilder.group({
       setName: [
@@ -70,6 +70,8 @@ export class AddToMyCollectionComponent implements OnInit {
       ]
     });
   }
+
+  // Operations for adding set by form...
 
   findSetByNumber() {
     let inputNumber;
@@ -100,7 +102,6 @@ export class AddToMyCollectionComponent implements OnInit {
       imageURL: this.setForm.get('imageURL').value,
       // barcodeValue: this.barcodeGateway.getBarcodeData(this.barcodeValue),
     };
-    console.log('newSet', newSet);
     this.mySetsDatabase.addToCollection(newSet)
       .subscribe(set => {
         this.displayFormSuccess = true;
@@ -108,6 +109,15 @@ export class AddToMyCollectionComponent implements OnInit {
       });
   }
 
+  closeBanner() {
+    if (this.displayFormSuccess === true) {
+      this.displayFormSuccess = false;
+    } else {
+      this.displayFormSuccess  = false;
+    }
+  }
+
+  // Operations for adding set by barcode scan...
   start() {
     this.showCaptureButton = true;
     this.videoDisplayToggle[0].classList.remove('hidden');
@@ -140,13 +150,5 @@ export class AddToMyCollectionComponent implements OnInit {
     this.videoDisplayToggle[0].classList.add('hidden');
     this.showCaptureButton = false;
     this.showCapturedImage = true;
-  }
-
-  closeBanner() {
-    if (this.displayFormSuccess === true) {
-      this.displayFormSuccess = false;
-    } else {
-      this.displayFormSuccess  = false;
-    }
   }
 }

@@ -16,7 +16,7 @@ export class BricksetScraperService {
   bricketGetSet() {
     this.apiKey = 'PEVh-NM7r-No3K';
     this.userHash = 'johnbreau';
-    this.year = '2019';
+    this.year = '2018';
     this.pageSize = '840';
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', 'https://brickset.com/api/v2.asmx?WSDL', true);

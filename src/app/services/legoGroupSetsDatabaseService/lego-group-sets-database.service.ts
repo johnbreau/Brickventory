@@ -12,14 +12,16 @@ export class LegoGroupSetsDatabaseService {
   getAllSets() {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('https://api.mlab.com/api/1/databases/lego-barcode-scanner/collections/allSetDatabase?f={"number": 1, "name": 1, "year":1}&l=200000&apiKey=0ICZTbnaNJoaKZDCnIl-NIZZ-Jd8_TmB')
+    return this.http.get('https://api.mlab.com/api/1/databases/lego-barcode-scanner/collections/allSetDatabase?f=
+{"number": 1, "name": 1, "year":1}&l=200000&apiKey=0ICZTbnaNJoaKZDCnIl-NIZZ-Jd8_TmB')
       .map(response => response.json());
   }
 
   getOneSet(setNumber) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('https://api.mlab.com/api/1/databases/lego-barcode-scanner/collections/allSetDatabase?q={"number":"' + setNumber + '"}&fo=true&apiKey=0ICZTbnaNJoaKZDCnIl-NIZZ-Jd8_TmB')
+    return this.http.get('https://api.mlab.com/api/1/databases/lego-barcode-scanner/collections/allSetDatabase?q=
+{"number":"' + setNumber + '"}&fo=true&apiKey=0ICZTbnaNJoaKZDCnIl-NIZZ-Jd8_TmB')
       .map(response => response.json());
   }
 
